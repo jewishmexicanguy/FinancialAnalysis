@@ -13,7 +13,7 @@ class BitcoinNetwork:
 	'''
 	
 	def foo(self):
-		print 'Test Complete'
+		print ('Test Complete')
 		
 class SQL_Access:
 	'''
@@ -44,13 +44,37 @@ class SQL_Access:
 		
 		self.conn.executescript('''
 			CREATE TABLE BitcoinPrice(
-				[Id] INTEGER PRIMARY KEY NOT NULL UNIQUE,
-				[UnixTimeStamp] INTEGER NOT NULL,
-				[PriceUSD] REAL NOT NULL
+			   [Id] INTEGER PRIMARY KEY NOT NULL UNIQUE,
+             [tid] INTEGER NOT NULL,
+			   [UnixTimeStamp] INTEGER NOT NULL,
+			   [PriceUSD] REAL NOT NULL,
+             [Type] INTEGER NOT NULL
 			)
 		''')
-		print "Created Table BitcoinPrice"
+		print ("Created Table BitcoinPrice")
+  
+	def DestroyTables(self):
+		'''
+       We need functionality to destroy these tables.
+       '''
+      
+		self.conn.executescript('''
+          DROP TABLE BitcoinPrice
+		''')
+		print ("Droped table BitcoinPrice")
 		
+	def SelectTables(self):
+		'''
+		We need functionality to get the tables that exist in this data base.
+		'''
+     
+		results = self.conn.executescript('''
+     	SELECT * FROM sqlite_master WHERE type = 'table'
+		''')
+		print('here')
+		for result in results:
+			print(result)
+     
 	def InsertPrice(self, UnixTimeStamp, USDPrice):
 		'''
 		This method will insert a singular record into our bitcoin price table.
@@ -70,7 +94,7 @@ class SQL_Access:
 		else:
 			statement = "Value timestamp: {0}, USDPrice: {1} was not inserted into our table".format(UnixTimeStamp, USDPrice)
 		# print a statement to standard output
-		print statement
+		print (statement)
 		
 	def ReadTable_BitcoinPrice(self):
 		'''
@@ -80,7 +104,7 @@ class SQL_Access:
 		# make a query to our DataBase
 		for i in self.c.execute("SELECT [Id], [UnixTimeStamp], [PriceUSD] FROM BitcoinPrice"):
 			# print each row that was returned from our query
-			print 'ID: {0}, UnixTime: {1}, USD: {2}'.format(str(i[0]), datetime.datetime.utcfromtimestamp(i[1]), str(i[2]))
+			print ('ID: {0}, UnixTime: {1}, USD: {2}'.format(str(i[0]), datetime.datetime.utcfromtimestamp(i[1]), str(i[2])))
 
 class TradesParser:
 	'''
@@ -95,7 +119,7 @@ class TradesParser:
 		self.active = True
 
 	def foo(self):
-		print self.active
+		print (self.active)
 		
 	def ParseCSV(self, CSVFile):
 		# access the csv file
@@ -139,5 +163,10 @@ class TradesParser:
 #a = TradesParser()
 #a.Parse_JSON_File('chart-data.json')
 
-a = SQL_Access()
-a.ReadTable_BitcoinPrice()
+#a = SQL_Access()
+#a.ReadTable_BitcoinPrice()
+
+#a = SQL_Access()
+#a.DestroyTables()
+#a.CreateTables()
+#a.SelectTables()
